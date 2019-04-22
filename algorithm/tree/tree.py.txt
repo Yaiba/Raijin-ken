@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+#coding: utf-8
+
+# general tree, every element in list is a subtree
+T = [["a", "b"], ["c"], ["d", ["e", "f"]]]
+# T[0] is a subtree
+assert T[0][1] == "b"
+# T[2][1] is a subtree
+assert T[2][1][0] == "e"
+#           t
+#   sbt |  sbt  |  sbt
+# a  b  |    c  |  d  | sbt
+#                     | e  f
+
+
+# binary tree
+class BinaryTree(object):
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
+
+#        bt
+#    sbt |  sbt
+#  a   b | c   d
+bt = BinaryTree(BinaryTree("a", "b"), BinaryTree("c", "d"))
+assert bt.right.left == "c"
+
+# A common way of implementing trees, especially in languages that don’t have
+# built-in lists, is the “first child, next sibling” representation.
+##
+# each tree node has two “pointers,” or attributes referencing other nodes,
+# just like in the binary tree case. However, the first of these refers to the
+# first child of the node, while the second refers to its next sibling (as the name implies)
+##
+# multiway tree
+class MultiwayTree(object):
+    def __init__(self, kids, next=None):
+        self.kids = self.val = kids
+        self.next = next
+
+# a tree is just like linked list
+#       t
+# a -> b -> c -> d
+mt = MultiwayTree(MultiwayTree("a", MultiwayTree("b", MultiwayTree("c", MultiwayTree("d")))))
+assert mt.kids.next.next.val == "c"
+

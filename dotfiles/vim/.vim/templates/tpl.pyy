@@ -1,0 +1,14 @@
+#!/usr/bin/env python
+# coding: utf-8
+#
+# Date  : [:VIM_EVAL:]strftime('%Y-%m-%d %H:%M')[:END_EVAL:]
+# Author: yaiba
+# Email : 4yaiba@gmail.com
+# Copyright [:VIM_EVAL:]strftime('%Y')[:END_EVAL:] Yaiba, all rights reserved.
+
+"""
+"""
+
+
+if __name__ == "__main__":
+    pass
