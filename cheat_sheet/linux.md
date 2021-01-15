@@ -63,6 +63,32 @@ timeout 10 yes|nc -vv -n ADDR 2222 > /dev/null  2>&1
 ## server side, when transmit is over, you get a result number n(byte),
 ## to get speed, (n*8/1024/1024)/10.0 （b/s）
 nc  -nvv -l -p 2222 > /dev/null
+
+
+# simple encrypted chat using nc, SuperSecretPWD is the symmetric key
+## server
+while IFS= read -r userinput;do echo "$userinput" | openssl enc -aes-256-ctr -a -A -k SuperSecretPWD;echo;done | nc -l 8877 | while IFS= read -r serveroutput;do echo "Incoming: $(echo "$serveroutput" | openssl enc -d -a -A -aes-256-ctr -k SuperSecretPWD)";done
+## client
+while IFS= read -r userinput;do echo "$userinput" | openssl enc -aes-256-ctr -a -A -k SuperSecretPWD;echo;done | nc localhost 8877 | while IFS= read -r serveroutput;do echo "Incoming: $(echo "$serveroutput" | openssl enc -d -a -A -aes-256-ctr -k SuperSecretPWD)";done
+
+
+# encrypted chat using openssl
+## server
+openssl req -x509 -nodes -days 364 -newkey rsa:2096 -batch -keyout PrivateKey.key -out PublicCertificate.cert
+openssl s_server -cert PublicCertificate.cert -key PrivateKey.key -accept 9876
+## client
+openssl s_client -connect 192.168.1.10:9876
+
+
+# encrypted chat using ncat(from nmap) over tls
+## server
+openssl req -x509 -nodes -days 364 -newkey rsa:2096 -batch -keyout PrivateKey.key -out PublicCertificate.cert
+ncat -vl 9876 --ssl --ssl-key PrivateKey.key --ssl-cert PublicCertificate.cert
+## client
+ncat -v --ssl 192.168.1.10 9876
+## or
+openssl s_client -connect 192.168.1.10:9876
+
 ```
 
 
